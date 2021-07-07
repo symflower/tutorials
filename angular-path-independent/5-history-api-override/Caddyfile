@@ -1,0 +1,6 @@
+http://localhost:4200
+
+root * dist
+file_server
+
+try_files {path} {path}/index.html

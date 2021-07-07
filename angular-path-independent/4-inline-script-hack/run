@@ -1,0 +1,8 @@
+#!/bin/sh
+[ -d dist ] && rm -r dist
+npx ng build --prod
+mkdir dist/foobar
+mv dist/* dist/foobar
+cp -r dist/{foobar,baz}
+sleep 3 && xdg-open http://localhost:4200/foobar &
+caddy run --config Caddyfile
