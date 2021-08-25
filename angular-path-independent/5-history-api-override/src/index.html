@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>BaseHrefDemo</title>
+  <script>
+    function overrideHistoryFunction(functionName) {
+      const originalFunction = history[functionName].bind(history)
+      history[functionName] = (data, title, url) => {
+        if (url === "#/") {
+          // Remove the part after the "#" if we don't need it.
+          originalFunction("", title, location.pathname + location.search)
+        } else if (url && url.startsWith("#")) {
+          // If it's just a fragment change (i.e. by Angular Router), proxy to the location API.
+          location.hash = url.substr(1)
+        } else {
+          originalFunction(data, title, url)
+        }
+      }
+    }
+    overrideHistoryFunction("pushState")
+    overrideHistoryFunction("replaceState")
+
+    document.write(`<base href="${location.pathname}${location.pathname.endsWith('/') ? '' : '/'}"/>`);
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+
+<body>
+  <app-root></app-root>
+</body>
+
+</html>
