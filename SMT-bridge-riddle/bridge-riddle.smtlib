@@ -1,0 +1,100 @@
+(declare-const A Int)
+(declare-const B Int)
+(declare-const C Int)
+(declare-const D Int)
+
+(assert (or (= A 1) (= A 2) (= A 5) (= A 10)))
+(assert (or (= B 1) (= B 2) (= B 5) (= B 10)))
+(assert (or (= C 1) (= C 2) (= C 5) (= C 10)))
+(assert (or (= D 1) (= D 2) (= D 5) (= D 10)))
+
+(assert (distinct A B C D))
+
+(declare-const firstWalkers (Array Int Int))
+(declare-const firstReturner Int)
+(declare-const secondWalkers (Array Int Int))
+(declare-const secondReturner Int)
+(declare-const thirdWalkers (Array Int Int))
+
+(assert (= (select firstWalkers 0) A))
+(assert (= (select firstWalkers 1) B))
+
+(assert (or (= firstReturner A) (= firstReturner B)))
+
+(assert (= (select secondWalkers 0) C))
+(assert
+	(or
+		(= (select secondWalkers 1) firstReturner)
+		(= (select secondWalkers 1) D)
+	)
+)
+
+(assert
+	(or
+		(= secondReturner C)
+		(ite
+			(= (select secondWalkers 1) firstReturner)
+			(or
+				(= secondReturner A)
+				(= secondReturner B)
+			)
+			(ite
+				(= firstReturner A)
+				(or
+					(= secondReturner B)
+					(= secondReturner D)
+				)
+				(or
+					(= secondReturner A)
+					(= secondReturner D)
+				)
+			)
+		)
+	)
+)
+
+(assert (= (select thirdWalkers 0) secondReturner))
+(assert
+	(ite
+		(= (select secondWalkers 1) firstReturner)
+		(= (select thirdWalkers 1) D)
+		(= (select thirdWalkers 1) firstReturner)
+	)
+)
+
+(define-fun max ((i Int) (j Int)) Int
+	(ite
+		(>= i j)
+		i
+		j
+	)
+)
+
+(declare-const time Int)
+(assert
+	(=
+		time
+		(+
+			(max
+				(select firstWalkers 0)
+				(select firstWalkers 1)
+			)
+			firstReturner
+			(max
+				(select secondWalkers 0)
+				(select secondWalkers 1)
+			)
+			secondReturner
+			(max
+				(select thirdWalkers 0)
+				(select thirdWalkers 1)
+			)
+		)
+	)
+)
+
+(minimize time)
+
+(check-sat)
+(get-model)
+
