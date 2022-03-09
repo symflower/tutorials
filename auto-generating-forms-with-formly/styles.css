@@ -1,0 +1,21 @@
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
+.btn {
+    margin-top: 1.5rem;
+}
+
+.btn:disabled {
+    cursor: default;
+}
+
+body {
+    background-color: #c5e1e2;
+}
+
+form {
+    margin: 5rem;
+}
+
+input {
+    margin-top: 1rem;
+}
