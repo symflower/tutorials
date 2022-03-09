@@ -1,0 +1,18 @@
+<form class="form">
+	<formly-form
+	  [form]="formGroup"
+	  [model]="formAttributes.model"
+	  [fields]="fields"
+	>
+	</formly-form>
+	<div *ngIf="formAttributes.buttonText">
+	  <button
+		class="button-submit btn btn-success w-100"
+		type="submit"
+		[disabled]="!formGroup.valid"
+		(click)="submit()"
+	  >
+		{{ formAttributes.buttonText }}
+	  </button>
+	</div>
+  </form>
